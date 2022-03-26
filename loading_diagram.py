@@ -13,8 +13,8 @@ aft_cargo_cg = 29.51789474  # [m]
 fwd_cargo_cg = 12.05168483  # [m]
 first_seat_cg = 6.755200984  # [m]
 last_seat_cg = first_seat_cg + small_pitch * 22 + medium_pitch + big_pitch
-middle_fuel_cg = 17.64608696  # [m]
-wings_fuel_cg = 18.75391304  # [m]
+middle_fuel_cg = 18.94325581  # [m]
+wings_fuel_cg = 20.32453488  # [m]
 lemac = 19.20840  # [m]
 mac = 3.48  # [m]
 oew_cg = 20.12092  # [m]
@@ -173,10 +173,14 @@ fuel_cg = np.append(fuel_cg, fuel_moment[-1] / fuel_mass[-1])
 
 fuel_cg_mac = (fuel_cg - lemac) / mac * 100
 
+most_aft_cg = max(np.max(cargo_cg_mac1), np.max(cargo_cg_mac2), np.max(window_cg_mac1), np.max(window_cg_mac2), np.max(aisle_cg_mac1), np.max(aisle_cg_mac2), np.max(fuel_cg_mac))
+most_fwd_cg = min(np.min(cargo_cg_mac1), np.min(cargo_cg_mac2), np.min(window_cg_mac1), np.min(window_cg_mac2), np.min(aisle_cg_mac1), np.min(aisle_cg_mac2), np.min(fuel_cg_mac))
+most_aft_cg_2pc = most_aft_cg + 2.0
+most_fwd_cg_2pc = most_fwd_cg - 2.0
 
 # Plot the loading diagram
 fig1 = plt.figure()
-fig1.suptitle('Loading diagram CRJ 1000')
+fig1.suptitle('Loading Diagram CRJ 1000')
 ax1 = fig1.add_subplot(1, 1, 1)
 ax1.plot(cargo_cg_mac1, cargo_mass1, 'x-', label="Cargo 1")
 ax1.plot(cargo_cg_mac2, cargo_mass2, 'x-', label="Cargo 2")
@@ -185,9 +189,14 @@ ax1.plot(window_cg_mac2, window_mass2, '.-', label="Window seats 2")
 ax1.plot(aisle_cg_mac1, aisle_mass1, '.-', label="Aisle seats 1")
 ax1.plot(aisle_cg_mac2, aisle_mass2, '.-', label="Aisle seats 2")
 ax1.plot([fuel_cg_mac[0], fuel_cg_mac[-1]], [fuel_mass[0], fuel_mass[-1]], 'x-', label="Fuel")
+ax1.axvline(most_aft_cg, color='grey', label=r"Extreme $x_{cg}$ values")
+ax1.axvline(most_fwd_cg, color='grey')
+ax1.axvline(most_aft_cg_2pc, color='black', label="2% margin")
+ax1.axvline(most_fwd_cg_2pc, color='black')
 ax1.set_xlabel(r'$x_{cg}$ [%MAC]')
 ax1.set_ylabel(r'Mass [kg]')
 ax1.legend()
+ax1.grid()
 
 plt.plot()
 plt.show()
